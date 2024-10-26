@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Dart
+name: Dart and Flutter
 
 on:
   push:
@@ -16,19 +16,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repository
       - uses: actions/checkout@v4
 
       # Install Flutter SDK
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'  # Specify the Flutter version if needed
+          flutter-version: 'stable'  # You can specify a particular version if needed
 
-      # Note: This workflow uses the latest stable version of the Dart SDK.
-      # You can specify other versions if desired, see documentation here:
-      # https://github.com/dart-lang/setup-dart/blob/main/README.md
-      # - uses: dart-lang/setup-dart@v1
+      # Install Dart SDK (optional if you only need Flutter)
       - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
 
+      # Install dependencies using Flutter
       - name: Install dependencies
         run: flutter pub get
 
@@ -36,12 +35,10 @@ jobs:
       # - name: Verify formatting
       #   run: dart format --output=none --set-exit-if-changed .
 
-      # Consider passing '--fatal-infos' for slightly stricter analysis.
+      # Analyze the project source
       - name: Analyze project source
         run: dart analyze
 
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed. Note that Flutter projects will
-      # want to change this to 'flutter test'.
+      # Run tests
       - name: Run tests
         run: dart test
