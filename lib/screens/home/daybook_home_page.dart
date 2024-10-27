@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dear_diary/config/theme.dart';
 import 'package:dear_diary/models/journal_entry.dart';
 import 'package:dear_diary/repositories/journal_repository.dart';
 import 'package:dear_diary/screens/editor/add_edit_note_page.dart';
@@ -54,14 +55,14 @@ class _DaybookHomePageState extends State<DaybookHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('daybook', style: TextStyle(color: Colors.white)),
+        title: const Text('daybook'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
+            icon: const Icon(Icons.search),
             onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            icon: const Icon(Icons.more_vert),
             onPressed: () {},
           ),
         ],
@@ -73,10 +74,10 @@ class _DaybookHomePageState extends State<DaybookHomePage> {
             key: Key(entries[index].id.toString()),
             direction: DismissDirection.endToStart,
             background: Container(
-              color: Colors.red,
+              color: AppColors.deleteColor,
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Icon(Icons.delete, color: Colors.white),
+              child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onError),
             ),
             onDismissed: (direction) {
               if (entries[index].id != null) {
@@ -102,10 +103,11 @@ class _DaybookHomePageState extends State<DaybookHomePage> {
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.white,
+      bottomNavigationBar: Theme(
+      data: Theme.of(context).copyWith(
+        bottomNavigationBarTheme: Theme.of(context).bottomNavigationBarTheme,
+      ),
+      child: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
@@ -121,6 +123,7 @@ class _DaybookHomePageState extends State<DaybookHomePage> {
           ),
         ],
       ),
+    ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {

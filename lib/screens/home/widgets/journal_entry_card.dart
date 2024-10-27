@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dear_diary/config/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:dear_diary/models/journal_entry.dart';
 
@@ -23,17 +24,17 @@ class JournalEntryCard extends StatelessWidget {
           children: [
             Text(
               '${DateFormat('dd MMM').format(entry.date).toUpperCase()} ${entry.date.year}, ${DateFormat('EEEE').format(entry.date)}',
-              style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
               DateFormat('hh:mm a').format(entry.date),
-              style: const TextStyle(color: Colors.white70),
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Text(
               entry.content,
-              style: const TextStyle(color: Colors.white),
+              style: Theme.of(context).textTheme.bodyLarge,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -49,7 +50,7 @@ class JournalEntryCard extends StatelessWidget {
                 ),
               ),
             ],
-            Divider(color: Colors.grey[800]),
+            const Divider(),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dear_diary/config/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:dear_diary/models/journal_entry.dart';
 
@@ -57,12 +58,13 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
           children: [
             Text(
               '${DateFormat('dd MMM yyyy').format(_currentDate)}, ${DateFormat('EEEE').format(_currentDate)}',
-              style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold),
+
             ),
             const SizedBox(height: 4),
             Text(
               DateFormat('hh:mm a').format(_currentDate),
-              style: const TextStyle(color: Colors.white70),
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             TextField(
@@ -72,7 +74,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
                 hintText: 'Write your note here...',
                 border: InputBorder.none,
               ),
-              style: const TextStyle(color: Colors.white),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ],
         ),
