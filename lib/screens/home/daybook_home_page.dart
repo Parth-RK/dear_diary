@@ -4,7 +4,7 @@ import 'package:dear_diary/repositories/journal_repository.dart';
 import 'package:dear_diary/screens/editor/add_edit_note_page.dart';
 import 'package:dear_diary/screens/home/widgets/journal_entry_card.dart';
 
-import 'package:mongo_dart/mongo_dart.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class DaybookHomePage extends StatefulWidget {
   const DaybookHomePage({super.key});
@@ -45,7 +45,7 @@ class _DaybookHomePageState extends State<DaybookHomePage> {
     _loadEntries();
   }
 
-  Future<void> _deleteEntry(ObjectId id) async {
+  Future<void> _deleteEntry(mongo.ObjectId id) async {
     await _repository.deleteEntry(id);
     _loadEntries();
   }
