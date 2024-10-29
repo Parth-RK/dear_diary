@@ -52,15 +52,15 @@ class _DaybookHomePageState extends State<DaybookHomePage> {
   }
 
   Future<void> _deleteEntry(String id) async {
-    await _repository.deleteEntry(id);
-    _loadEntries();
-  }
+  await _repository.softDeleteEntry(id);
+  _loadEntries();
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('daybook'),
+        title: const Text('My Diary'),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

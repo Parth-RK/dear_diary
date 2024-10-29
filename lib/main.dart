@@ -1,3 +1,5 @@
+// /lib/main.dart
+import 'package:dear_diary/screens/more/more_options_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dear_diary/config/theme.dart';
 import 'package:dear_diary/screens/home/daybook_home_page.dart';
@@ -5,6 +7,8 @@ import 'package:dear_diary/services/database_service.dart';
 import 'package:dear_diary/screens/calendar/calendar_page.dart';
 import 'package:dear_diary/models/journal_entry.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:dear_diary/config/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,10 +21,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Daybook',
-      theme: AppTheme.darkTheme,
-      home: const DaybookHomeScreen(),
+    return ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, _) => MaterialApp(
+          title: 'Daybook',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          home: const DaybookHomeScreen(),
+        ),
+      ),
     );
   }
 }
@@ -86,7 +97,7 @@ class _DaybookHomeScreenState extends State<DaybookHomeScreen> {
         children: [
           const DaybookHomePage(),
           CalendarPage(entries: _entries),
-          const Center(child: Text('More')), // Placeholder for More page
+          const MoreOptionsPage(),
         ],
       ),
       bottomNavigationBar: Theme(

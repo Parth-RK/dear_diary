@@ -17,6 +17,9 @@ class JournalEntry extends HiveObject {
   @HiveField(3)
   String? image;
 
+  @HiveField(4)
+  bool isDeleted = false;
+
   JournalEntry({
     this.id,
     required this.date,

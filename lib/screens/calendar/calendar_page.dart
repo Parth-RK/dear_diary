@@ -1,3 +1,4 @@
+// lib/screens/calendar/calendar_page.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:dear_diary/models/journal_entry.dart';
@@ -72,70 +73,85 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TableCalendar<JournalEntry>(
-          firstDay: DateTime.utc(2020, 1, 1),
-          lastDay: DateTime.utc(2030, 12, 31),
-          focusedDay: _focusedDay,
-          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-          eventLoader: _getEntriesForDay,
-          calendarStyle: CalendarStyle(
-            markersMaxCount: 3,
-            canMarkersOverflow: false,
-            markerSize: 6,
-            selectedDecoration: BoxDecoration(
-              color: AppColors.primaryColor,
-              shape: BoxShape.circle,
-            ),
-            todayDecoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.5),
-              shape: BoxShape.circle,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Calendar'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {},
           ),
-          calendarBuilders: CalendarBuilders(
-            markerBuilder: (context, date, events) {
-              if (events.isNotEmpty) {
-                return _buildEventsMarker(events as List<JournalEntry>);
-              }
-              return null;
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          TableCalendar<JournalEntry>(
+            firstDay: DateTime.utc(2020, 1, 1),
+            lastDay: DateTime.utc(2030, 12, 31),
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            eventLoader: _getEntriesForDay,
+            calendarStyle: CalendarStyle(
+              markersMaxCount: 3,
+              canMarkersOverflow: false,
+              markerSize: 6,
+              selectedDecoration: BoxDecoration(
+                color: AppColors.primaryColor,
+                shape: BoxShape.circle,
+              ),
+              todayDecoration: BoxDecoration(
+                color: AppColors.primaryColor.withOpacity(0.5),
+                shape: BoxShape.circle,
+              ),
+            ),
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, date, events) {
+                if (events.isNotEmpty) {
+                  return _buildEventsMarker(events as List<JournalEntry>);
+                }
+                return null;
+              },
+            ),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
             },
           ),
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            });
-          },
-        ),
-        const Divider(),
-        Expanded(
-          child: ListView.builder(
-            itemCount: _getEntriesForDay(_selectedDay).length,
-            itemBuilder: (context, index) {
-              final entry = _getEntriesForDay(_selectedDay)[index];
-              return ListTile(
-                title: Text(
-                  DateFormat('hh:mm a').format(entry.date),
-                  style: TextStyle(color: AppColors.primaryColor),
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    entry.content,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+          const Divider(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _getEntriesForDay(_selectedDay).length,
+              itemBuilder: (context, index) {
+                final entry = _getEntriesForDay(_selectedDay)[index];
+                return ListTile(
+                  title: Text(
+                    DateFormat('hh:mm a').format(entry.date),
+                    style: TextStyle(color: AppColors.primaryColor),
                   ),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
-              );
-            },
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      entry.content,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

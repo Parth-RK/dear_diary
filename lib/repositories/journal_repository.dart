@@ -15,11 +15,6 @@ class JournalRepository {
     _box = await DatabaseService.instance.getBox<JournalEntry>(_boxName);
   }
 
-  Future<List<JournalEntry>> getAllEntries() async {
-    return _box.values.toList()
-      ..sort((a, b) => b.date.compareTo(a.date)); // Sort by date descending
-  }
-
   Future<void> addEntry(JournalEntry entry) async {
     await _box.put(entry.id, entry);
   }
@@ -39,5 +34,31 @@ class JournalRepository {
       await _box.compact(); // Optimize the box
       await _box.close();
     }
+  }
+  Future<List<JournalEntry>> getAllEntries({bool includeDeleted = false}) async {
+    return _box.values
+        .where((entry) => includeDeleted ? entry.isDeleted : !entry.isDeleted)
+        .toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
+  }
+
+  Future<void> softDeleteEntry(String id) async {
+    final entry = _box.get(id);
+    if (entry != null) {
+      entry.isDeleted = true;
+      await _box.put(id, entry);
+    }
+  }
+
+  Future<void> restoreEntry(String id) async {
+    final entry = _box.get(id);
+    if (entry != null) {
+      entry.isDeleted = false;
+      await _box.put(id, entry);
+    }
+  }
+
+  Future<void> permanentlyDeleteEntry(String id) async {
+    await _box.delete(id);
   }
 }

@@ -21,13 +21,13 @@ class JournalEntryAdapter extends TypeAdapter<JournalEntry> {
       date: fields[1] as DateTime,
       content: fields[2] as String,
       image: fields[3] as String?,
-    );
+    )..isDeleted = fields[4] as bool;
   }
 
   @override
   void write(BinaryWriter writer, JournalEntry obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +35,9 @@ class JournalEntryAdapter extends TypeAdapter<JournalEntry> {
       ..writeByte(2)
       ..write(obj.content)
       ..writeByte(3)
-      ..write(obj.image);
+      ..write(obj.image)
+      ..writeByte(4)
+      ..write(obj.isDeleted);
   }
 
   @override
