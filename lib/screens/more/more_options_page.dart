@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dear_diary/config/theme_provider.dart';
 import 'package:dear_diary/screens/more/trash_page.dart';
-import 'package:dear_diary/config/theme.dart';
 
 class MoreOptionsPage extends StatelessWidget {
   const MoreOptionsPage({super.key});
