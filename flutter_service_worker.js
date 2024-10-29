@@ -4,13 +4,13 @@ const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
 const RESOURCES = {"flutter.js": "f393d3c16b631f36852323de8e583132",
-"main.dart.js": "373c08388c2fccb0144abf3b85aa9072",
+"main.dart.js": "80a6a7bc26c105436acee1f4174aac6d",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/AssetManifest.bin": "7bb2cd4fe2f2c2baacc59b023f673b4d",
-"assets/fonts/MaterialIcons-Regular.otf": "9c930ec188f9479b93a697b39aca62c6",
+"assets/fonts/MaterialIcons-Regular.otf": "9550fe181112bfd7058f83bf77f11a30",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "e986ebe42ef785b27164c36a9abc7818",
 "assets/assets/japan_trip.jpg": "c6a5d59f52dbab5b6ffa12ca1f6db15e",
-"assets/NOTICES": "7f8b94473a5806c77a2435243dc7c18d",
+"assets/NOTICES": "2857f7010bf4ea7bcbb300ce55b6598e",
 "assets/shaders/ink_sparkle.frag": "ecc85a2e95f5e9f53123dcaf8cb9b6ce",
 "assets/AssetManifest.json": "635cf7ef0b1f35544fbbbcaac1516ffd",
 "assets/AssetManifest.bin.json": "bf840f33e55e734058af9f24121f3d00",
@@ -33,7 +33,7 @@ const RESOURCES = {"flutter.js": "f393d3c16b631f36852323de8e583132",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "version.json": "c4e0bfbd84cc66dfafadffced40f4119",
-"flutter_bootstrap.js": "94d8bd2885ad01895011681416afb73c"};
+"flutter_bootstrap.js": "c09a674b6ef8aa1dcf3831374784aaf5"};
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",
