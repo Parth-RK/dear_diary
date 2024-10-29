@@ -1,11 +1,10 @@
+// lib/screens/home/daybook_home_page.dart
 import 'package:flutter/material.dart';
 import 'package:dear_diary/config/theme.dart';
 import 'package:dear_diary/models/journal_entry.dart';
 import 'package:dear_diary/repositories/journal_repository.dart';
 import 'package:dear_diary/screens/editor/add_edit_note_page.dart';
 import 'package:dear_diary/screens/home/widgets/journal_entry_card.dart';
-
-import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class DaybookHomePage extends StatefulWidget {
   const DaybookHomePage({super.key});
@@ -22,6 +21,12 @@ class _DaybookHomePageState extends State<DaybookHomePage> {
   void initState() {
     super.initState();
     _initializeRepository();
+  }
+
+  @override
+  void dispose() {
+    _repository.closeBox(); // Close the Hive box when disposing
+    super.dispose();
   }
 
   Future<void> _initializeRepository() async {
@@ -46,7 +51,7 @@ class _DaybookHomePageState extends State<DaybookHomePage> {
     _loadEntries();
   }
 
-  Future<void> _deleteEntry(mongo.ObjectId id) async {
+  Future<void> _deleteEntry(String id) async {
     await _repository.deleteEntry(id);
     _loadEntries();
   }
@@ -71,7 +76,7 @@ class _DaybookHomePageState extends State<DaybookHomePage> {
         itemCount: entries.length,
         itemBuilder: (context, index) {
           return Dismissible(
-            key: Key(entries[index].id.toString()),
+            key: Key(entries[index].id ?? ''),
             direction: DismissDirection.endToStart,
             background: Container(
               color: AppColors.deleteColor,
@@ -103,27 +108,6 @@ class _DaybookHomePageState extends State<DaybookHomePage> {
           );
         },
       ),
-      bottomNavigationBar: Theme(
-      data: Theme.of(context).copyWith(
-        bottomNavigationBarTheme: Theme.of(context).bottomNavigationBarTheme,
-      ),
-      child: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Daybook',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.more_horiz),
-            label: 'More',
-          ),
-        ],
-      ),
-    ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
