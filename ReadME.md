@@ -15,14 +15,19 @@ Dear Diary is a Flutter-based application that allows users to keep track of the
 ## Screenshots
 <table>
   <tr>
-    <td>First Screen Page</td>
-     <td>Holiday Mention</td>
-     <td>Present day in purple and selected day in pink</td>
+    <td>Home Screen</td>
+     <td>More Screen</td>
+     <td>Trash Screen</td>
   </tr>
   <tr>
     <td><img src="screenshots/1.jpg" width=270 height=480></td>
     <td><img src="screenshots/2.jpg" width=270 height=480></td>
     <td><img src="screenshots/3.jpg" width=270 height=480></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/4.jpg" width=270 height=480></td>
+    <td><img src="screenshots/5.jpg" width=270 height=480></td>
+    <td><img src="screenshots/6.jpg" width=270 height=480></td>
   </tr>
  </table>
 
