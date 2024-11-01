@@ -24,7 +24,7 @@ Dear Diary is a Flutter-based application that allows users to keep track of the
     <td><img src="screenshots/2.jpg" width=270 height=480></td>
     <td><img src="screenshots/3.jpg" width=270 height=480></td>
   </tr>
-  <tr></tr>
+  <tr>&nbsp;</tr>
   <tr>
     <td>Dark Home Screen</td>
      <td>Calendar Screen</td>
@@ -37,23 +37,6 @@ Dear Diary is a Flutter-based application that allows users to keep track of the
   </tr>
  </table>
 
-
-
-
-
-
-
-
-
-![Home Screen](screenshots/1.jpg) | ![More Screen](screenshots/2.jpg) |
-Trash Screen
-![Trash Screen](screenshots/3.jpg)
-Dark Home Screen
-![Dark Home Screen](screenshots/4.jpg)
-Calendar Screen
-![Calendar Screen](screenshots/5.jpg)
-Another Calendar Screen
-![Another Calendar Screen](screenshots/6.jpg)
 
 ## Getting Started
 
