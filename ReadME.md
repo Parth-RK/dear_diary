@@ -13,6 +13,29 @@ Dear Diary is a Flutter-based application that allows users to keep track of the
 - Offline support
 
 ## Screenshots
+<style>
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table td {
+    padding: 10px;
+    text-align: center;
+  }
+  .table img {
+    max-width: 100%;
+    height: auto;
+  }
+  @media (max-width: 600px) {
+    .table, .table tbody, .table tr, .table td {
+      display: block;
+      width: 100%;
+    }
+    .table tr {
+      margin-bottom: 10px;
+    }
+  }
+</style>
 <table>
   <tr>
     <td>Home Screen</td>
@@ -20,9 +43,9 @@ Dear Diary is a Flutter-based application that allows users to keep track of the
      <td>Trash Box</td>
   </tr>
   <tr>
-    <td><img src="screenshots/1.jpg" width=270 height=480></td>
-    <td><img src="screenshots/2.jpg" width=270 height=480></td>
-    <td><img src="screenshots/3.jpg" width=270 height=480></td>
+    <td><img src="screenshots/1.jpg" alt=""></td>
+    <td><img src="screenshots/2.jpg" alt=""></td>
+    <td><img src="screenshots/3.jpg" alt=""></td>
   </tr>
   <tr>
     <td>&nbsp;</td>
@@ -35,9 +58,9 @@ Dear Diary is a Flutter-based application that allows users to keep track of the
      <td>Another Calendar Screen</td>
   </tr>
   <tr>
-    <td><img src="screenshots/4.jpg" width=270 height=480></td>
-    <td><img src="screenshots/5.jpg" width=270 height=480></td>
-    <td><img src="screenshots/6.jpg" width=270 height=480></td>
+    <td><img src="screenshots/4.jpg" alt=""></td>
+    <td><img src="screenshots/5.jpg" alt=""></td>
+    <td><img src="screenshots/6.jpg" alt=""></td>
   </tr>
  </table>
 
