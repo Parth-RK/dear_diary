@@ -12,7 +12,7 @@ Dear Diary is a Flutter-based application that allows users to keep track of the
 - Customizable themes
 - Offline support
 
-## Screenshots
+## Screenshots(Old)
 <table style="width: 100%; border-collapse: collapse;">
   <tr>
     <td style="padding: 10px; text-align: center;">Home Screen</td>
