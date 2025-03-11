@@ -2,11 +2,13 @@ import 'package:dear_diary/data/datasources/local/hive_journal_datasource.dart';
 import 'package:dear_diary/data/models/journal_entry_model.dart';
 import 'package:dear_diary/domain/entities/journal_entry.dart';
 import 'package:dear_diary/domain/repositories/journal_repository.dart';
+import 'package:dear_diary/utils/storage_utils.dart';
 
 class JournalRepositoryImpl implements JournalRepository {
   final HiveJournalDataSource localDataSource;
+  final StorageUtils storageUtils;
 
-  JournalRepositoryImpl({required this.localDataSource});
+  JournalRepositoryImpl({required this.localDataSource, required this.storageUtils});
 
   @override
   Future<List<JournalEntry>> getJournalEntries() async {
@@ -23,16 +25,23 @@ class JournalRepositoryImpl implements JournalRepository {
   @override
   Future<void> addJournalEntry(JournalEntry entry) async {
     await localDataSource.addJournalEntry(JournalEntryModel.fromEntity(entry));
+    // Also save as markdown file
+    await storageUtils.saveMarkdownFile(entry.title, entry.content);
   }
 
   @override
   Future<void> updateJournalEntry(JournalEntry entry) async {
     await localDataSource.updateJournalEntry(JournalEntryModel.fromEntity(entry));
+    // Update markdown file
+    await storageUtils.saveMarkdownFile(entry.title, entry.content);
   }
 
   @override
   Future<void> deleteJournalEntry(String id) async {
-    await localDataSource.deleteJournalEntry(id);
+    final entry = await localDataSource.getJournalEntryById(id);
+    if (entry != null) {
+      await localDataSource.deleteJournalEntry(id);
+    }
   }
 
   @override
@@ -42,7 +51,12 @@ class JournalRepositoryImpl implements JournalRepository {
 
   @override
   Future<void> deleteJournalEntryPermanently(String id) async {
-    await localDataSource.permanentlyDeleteJournalEntry(id);
+    final entry = await localDataSource.getJournalEntryById(id);
+    if (entry != null) {
+      // Delete markdown file
+      await storageUtils.deleteMarkdownFile(entry.title);
+      await localDataSource.permanentlyDeleteJournalEntry(id);
+    }
   }
 
   @override
@@ -55,7 +69,49 @@ class JournalRepositoryImpl implements JournalRepository {
   Future<void> emptyTrash() async {
     final deletedEntries = await localDataSource.getDeletedEntries();
     for (final entry in deletedEntries) {
+      // Delete markdown file
+      await storageUtils.deleteMarkdownFile(entry.title);
       await localDataSource.permanentlyDeleteJournalEntry(entry.id);
+    }
+  }
+
+  // New method to sync Hive entries with markdown files
+  Future<void> syncEntriesWithMarkdownFiles() async {
+    // Import markdown files to Hive
+    final markdownFiles = await storageUtils.getAllMarkdownFiles();
+    for (final file in markdownFiles) {
+      final fileName = file.path.split('/').last.replaceAll('.md', '');
+      final content = await file.readAsString();
+      
+      // Check if entry with this title exists
+      bool entryExists = false;
+      final entries = await localDataSource.getJournalEntries();
+      for (var entry in entries) {
+        if (entry.title == fileName) {
+          entryExists = true;
+          break;
+        }
+      }
+      
+      if (!entryExists) {
+        // Create new entry
+        final newEntry = JournalEntryModel(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          createdAt: DateTime.now(),
+          lastModifiedAt: DateTime.now(),
+          title: fileName,
+          content: content,
+          isDeleted: false,
+        );
+        
+        await localDataSource.addJournalEntry(newEntry);
+      }
+    }
+    
+    // Export Hive entries to markdown files
+    final entries = await localDataSource.getJournalEntries();
+    for (final entry in entries) {
+      await storageUtils.saveMarkdownFile(entry.title, entry.content);
     }
   }
 }

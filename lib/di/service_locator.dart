@@ -10,17 +10,24 @@ import 'package:dear_diary/domain/usecases/journal_entry_deletion.dart';
 import 'package:dear_diary/app/theme/theme_cubit.dart';
 import 'package:dear_diary/presentation/bloc/journal/journal_bloc.dart';
 import 'package:dear_diary/presentation/bloc/trash/trash_bloc.dart';
+import 'package:dear_diary/utils/storage_utils.dart';
 
 final GetIt sl = GetIt.instance;
 
 Future<void> initServiceLocator() async {
+  // Utils
+  sl.registerSingleton<StorageUtils>(StorageUtils());
+  
   // Data sources
   final dataSource = await HiveJournalDataSource.create();
   sl.registerSingleton<HiveJournalDataSource>(dataSource);
   
   // Repositories
   sl.registerSingleton<JournalRepository>(
-    JournalRepositoryImpl(localDataSource: sl<HiveJournalDataSource>()),
+    JournalRepositoryImpl(
+      localDataSource: sl<HiveJournalDataSource>(),
+      storageUtils: sl<StorageUtils>(),
+    ),
   );
   
   // Use cases

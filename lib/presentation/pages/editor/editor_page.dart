@@ -20,6 +20,8 @@ class EditorPage extends StatefulWidget {
 class _EditorPageState extends State<EditorPage> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
+  final _titleFocusNode = FocusNode();
+  final _contentFocusNode = FocusNode();
   final List<String> _images = [];
   final List<String> _tags = [];
   String _mood = '';
@@ -38,130 +40,160 @@ class _EditorPageState extends State<EditorPage> {
       _tags.addAll(_currentEntry.tags);
       _mood = _currentEntry.mood;
     }
+    
+    // Delay focus to avoid the pointer binding issue
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Don't set automatic focus initially
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_isEditing ? 'Edit Entry' : 'New Entry'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.photo_camera),
-            onPressed: _pickImage,
-          ),
-          IconButton(
-            icon: const Icon(Icons.mood),
-            onPressed: _showMoodPicker,
-          ),
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _saveEntry,
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Date display
-            Text(
-              'Today, ${DateFormat('MMMM d, yyyy').format(DateTime.now())}',
-              style: Theme.of(context).textTheme.titleMedium,
+    return GestureDetector(
+      // Close keyboard when tapping outside input fields
+      onTap: () {
+        _titleFocusNode.unfocus();
+        _contentFocusNode.unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_isEditing ? 'Edit Entry' : 'New Entry'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.photo_camera),
+              onPressed: _pickImage,
             ),
-            const SizedBox(height: 16),
-            
-            // Title field
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Title',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 1,
+            IconButton(
+              icon: const Icon(Icons.mood),
+              onPressed: _showMoodPicker,
             ),
-            const SizedBox(height: 16),
-            
-            // Content field
-            TextField(
-              controller: _contentController,
-              decoration: const InputDecoration(
-                labelText: 'What\'s on your mind?',
-                border: OutlineInputBorder(),
-                alignLabelWithHint: true,
-              ),
-              maxLines: 15,
-              textAlignVertical: TextAlignVertical.top,
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: _saveEntry,
             ),
-            
-            // Images section
-            if (_images.isNotEmpty) ...[
-              const SizedBox(height: 16),
+          ],
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Date display
               Text(
-                'Photos',
+                'Today, ${DateFormat('MMMM d, yyyy').format(DateTime.now())}',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              const SizedBox(height: 8),
-              SizedBox(
-                height: 100,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _images.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Stack(
-                        children: [
-                          Image.network(
-                            _images[index],
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: IconButton(
-                              icon: const Icon(Icons.close, color: Colors.white),
-                              onPressed: () {
-                                setState(() {
-                                  _images.removeAt(index);
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-            
-            // Mood section
-            if (_mood.isNotEmpty) ...[
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  Text(
-                    'Mood: ',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(width: 8),
-                  Chip(
-                    label: Text(_mood),
-                    deleteIcon: const Icon(Icons.close, size: 16),
-                    onDeleted: () {
-                      setState(() {
-                        _mood = '';
-                      });
+              
+              // Title field
+              TextField(
+                controller: _titleController,
+                focusNode: _titleFocusNode,
+                decoration: const InputDecoration(
+                  labelText: 'Title',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 1,
+                // Avoid autofocus which can cause issues
+                autofocus: false,
+                onTap: () {
+                  // Manual focus handling
+                  if (!_titleFocusNode.hasFocus) {
+                    FocusScope.of(context).requestFocus(_titleFocusNode);
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              
+              // Content field
+              TextField(
+                controller: _contentController,
+                focusNode: _contentFocusNode,
+                decoration: const InputDecoration(
+                  labelText: 'What\'s on your mind?',
+                  border: OutlineInputBorder(),
+                  alignLabelWithHint: true,
+                ),
+                maxLines: 15,
+                textAlignVertical: TextAlignVertical.top,
+                // Avoid autofocus which can cause issues
+                autofocus: false,
+                onTap: () {
+                  // Manual focus handling
+                  if (!_contentFocusNode.hasFocus) {
+                    FocusScope.of(context).requestFocus(_contentFocusNode);
+                  }
+                },
+              ),
+              
+              // Images section
+              if (_images.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Text(
+                  'Photos',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 100,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _images.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Stack(
+                          children: [
+                            Image.network(
+                              _images[index],
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: IconButton(
+                                icon: const Icon(Icons.close, color: Colors.white),
+                                onPressed: () {
+                                  setState(() {
+                                    _images.removeAt(index);
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
-                ],
-              ),
+                ),
+              ],
+              
+              // Mood section
+              if (_mood.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Text(
+                      'Mood: ',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(width: 8),
+                    Chip(
+                      label: Text(_mood),
+                      deleteIcon: const Icon(Icons.close, size: 16),
+                      onDeleted: () {
+                        setState(() {
+                          _mood = '';
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -279,6 +311,8 @@ class _EditorPageState extends State<EditorPage> {
   void dispose() {
     _titleController.dispose();
     _contentController.dispose();
+    _titleFocusNode.dispose();
+    _contentFocusNode.dispose();
     super.dispose();
   }
 }
