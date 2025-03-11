@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:dear_diary/data/datasources/local/hive_journal_datasource.dart';
 import 'package:dear_diary/data/models/journal_entry_model.dart';
 import 'package:dear_diary/domain/entities/journal_entry.dart';
@@ -25,15 +26,31 @@ class JournalRepositoryImpl implements JournalRepository {
   @override
   Future<void> addJournalEntry(JournalEntry entry) async {
     await localDataSource.addJournalEntry(JournalEntryModel.fromEntity(entry));
-    // Also save as markdown file
-    await storageUtils.saveMarkdownFile(entry.title, entry.content);
+    
+    try {
+      // Also save as markdown file (handles web differently)
+      await storageUtils.saveMarkdownFile(entry.title, entry.content);
+    } catch (e) {
+      // Handle or log error but don't prevent the main operation
+      if (kDebugMode) {
+        print('Error saving to markdown file: $e');
+      }
+    }
   }
 
   @override
   Future<void> updateJournalEntry(JournalEntry entry) async {
     await localDataSource.updateJournalEntry(JournalEntryModel.fromEntity(entry));
-    // Update markdown file
-    await storageUtils.saveMarkdownFile(entry.title, entry.content);
+    
+    try {
+      // Update markdown file
+      await storageUtils.saveMarkdownFile(entry.title, entry.content);
+    } catch (e) {
+      // Handle or log error but don't prevent the main operation
+      if (kDebugMode) {
+        print('Error updating markdown file: $e');
+      }
+    }
   }
 
   @override
@@ -53,8 +70,16 @@ class JournalRepositoryImpl implements JournalRepository {
   Future<void> deleteJournalEntryPermanently(String id) async {
     final entry = await localDataSource.getJournalEntryById(id);
     if (entry != null) {
-      // Delete markdown file
-      await storageUtils.deleteMarkdownFile(entry.title);
+      try {
+        // Delete markdown file (handles web differently)
+        await storageUtils.deleteMarkdownFile(entry.title);
+      } catch (e) {
+        // Handle or log error but continue with deletion
+        if (kDebugMode) {
+          print('Error deleting markdown file: $e');
+        }
+      }
+      
       await localDataSource.permanentlyDeleteJournalEntry(id);
     }
   }
@@ -69,8 +94,16 @@ class JournalRepositoryImpl implements JournalRepository {
   Future<void> emptyTrash() async {
     final deletedEntries = await localDataSource.getDeletedEntries();
     for (final entry in deletedEntries) {
-      // Delete markdown file
-      await storageUtils.deleteMarkdownFile(entry.title);
+      try {
+        // Delete markdown file (handles web differently)
+        await storageUtils.deleteMarkdownFile(entry.title);
+      } catch (e) {
+        // Handle or log error but continue with deletion
+        if (kDebugMode) {
+          print('Error deleting markdown file during trash emptying: $e');
+        }
+      }
+      
       await localDataSource.permanentlyDeleteJournalEntry(entry.id);
     }
   }

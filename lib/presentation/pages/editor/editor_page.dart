@@ -266,12 +266,19 @@ class _EditorPageState extends State<EditorPage> {
   }
 
   void _saveEntry() {
-    final title = _titleController.text.trim();
+    var title = _titleController.text.trim();
     final content = _contentController.text.trim();
     
-    if (title.isEmpty || content.isEmpty) {
+    // If title is empty, use the current date and time as the title
+    if (title.isEmpty) {
+      title = DateFormat('MMMM d, yyyy - h:mm a').format(DateTime.now());
+      _titleController.text = title; // Update the controller with the generated title
+    }
+    
+    // Content cannot be empty
+    if (content.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Title and content cannot be empty')),
+        const SnackBar(content: Text('Content cannot be empty')),
       );
       return;
     }
